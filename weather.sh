@@ -1,32 +1,51 @@
 #!/bin/bash
 loc=1
+update=0
 location="Poznan"
-while getopts l:f o
-do	case "$o" in
+while getopts ":l:fu" o
+do	case "${o}" in
 	l)	location="$OPTARG";;
 	f)	loc=2;;
+  u)  update=1;;
 	esac
 done
-
+function getData()
+{
+  echo $update
+  weatherJson="$(curl $full_url | jq '.')"
+  locationData="$(echo $weatherJson | jq '.location.name')"
+  if [[ "$locationData" = "null" ]]
+  then
+    echo "Unknown location"
+  else
+    #clear
+    weatherData="$(echo $weatherJson | jq '.current.condition.text')"
+    if [ $loc -eq 1 ]
+    then
+      tempData="$(echo $weatherJson | jq '.current.temp_c')"
+      windData="$(echo $weatherJson | jq '.current.wind_kph')""kph"
+    else
+      tempData="$(echo $weatherJson | jq '.current.temp_f')"
+      windData="$(echo $weatherJson | jq '.current.wind_mph')""mph"
+    fi
+    echo "Showing weather for ${locationData}"
+    echo "Weather today is ${weatherData}"
+    echo "Temperature ${tempData}"
+    echo "Wind blows ${windData}"
+  fi
+  if [[ $1 > 0 ]]
+  then
+    sleep $1
+  fi
+}
 base_url='http://api.apixu.com/v1/current.json?key=bef4b1337a6c4781826215259181511'
 full_url=$base_url+'&q='+$location
-weatherJson="$(curl $full_url | jq '.')"
-locationData="$(echo $weatherJson | jq '.location.name')"
-if [[ "$locationData" = "null" ]]
+if [ $update -eq 1 ]
 then
-  echo "Unknown location"
+  while [ $update -eq 1 ]
+  do
+    getData 300
+  done
 else
-  weatherData="$(echo $weatherJson | jq '.current.condition.text')"
-  if [ $loc -eq 1 ]
-  then
-    tempData="$(echo $weatherJson | jq '.current.temp_c')"
-    windData="$(echo $weatherJson | jq '.current.wind_kph')""kph"
-  else
-    tempData="$(echo $weatherJson | jq '.current.temp_f')"
-    windData="$(echo $weatherJson | jq '.current.wind_mph')""mph"
-  fi
-  echo "Showing weather for ${locationData}"
-  echo "Weather today is ${weatherData}"
-  echo "Temperature ${tempData}"
-  echo "Wind blows ${windData}"
+  getData
 fi
