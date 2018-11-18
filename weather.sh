@@ -13,14 +13,13 @@ do	case "${o}" in
 done
 function getData()
 {
-  echo $update
   weatherJson="$(curl $full_url | jq '.')"
   locationData="$(echo $weatherJson | jq '.location.name')"
   if [[ "$locationData" = "null" ]]
   then
     echo "Unknown location"
   else
-    #clear
+    clear
     weatherData="$(echo $weatherJson | jq '.current.condition.text')"
     if [ $loc -eq 1 ]
     then
@@ -30,10 +29,12 @@ function getData()
       tempData="$(echo $weatherJson | jq '.current.temp_f')"
       windData="$(echo $weatherJson | jq '.current.wind_mph')""mph"
     fi
+		echo "=============================="
     echo "Showing weather for ${locationData}"
     echo "Weather today is ${weatherData}"
     echo "Temperature ${tempData}"
     echo "Wind blows ${windData}"
+		echo "=============================="
   fi
   if [[ $1 > 0 ]]
   then
