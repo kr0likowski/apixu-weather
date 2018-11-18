@@ -1,7 +1,9 @@
 #!/bin/bash
 loc=1
 update=0
+time=300
 location="Poznan"
+key=${APIXUKEY:-'http://api.apixu.com/v1/current.json?key=bef4b1337a6c4781826215259181511'}
 while getopts ":l:fu" o
 do	case "${o}" in
 	l)	location="$OPTARG";;
@@ -38,13 +40,13 @@ function getData()
     sleep $1
   fi
 }
-base_url='http://api.apixu.com/v1/current.json?key=bef4b1337a6c4781826215259181511'
-full_url=$base_url+'&q='+$location
+	base_url=$key
+	full_url=$base_url+'&q='+$location
 if [ $update -eq 1 ]
 then
   while [ $update -eq 1 ]
   do
-    getData 300
+    getData $time
   done
 else
   getData
