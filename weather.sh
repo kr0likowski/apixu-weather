@@ -2,8 +2,9 @@
 loc=1
 update=0
 updatetime=300
-tmp="./tmp/weather.json"
+tmp="/tmp/weather.json"
 location="Poznan"
+a=$((updatetime/60))
 key=${APIXUKEY:-'http://api.apixu.com/v1/current.json?key=bef4b1337a6c4781826215259181511'}
 while getopts ":l:fu" o
 do	case "${o}" in
@@ -63,7 +64,6 @@ function displayData()
     echo "Temperature ${tempData}"
     echo "Wind blows ${windData}"
 		echo "=============================="
-		a=$((updatetime/60))
 		echo "Updating every $a minutes"
   fi
   if [[ $1 > 0 ]]
