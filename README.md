@@ -3,14 +3,19 @@ Apixu Bash Weather Script
 
 ## Author
 Jędrzej Królikowski
-
+2018
 ## Description
-Simple script downloading weather data for chosen location and showing it in pleasant way
+Simple script downloading weather data for chosen location and showing it in terminal
+
+#Usage
+./weather.sh [OPTIONS]
 
 ## Options
-If a flag -f is given, the script use American units
+-f
+Shows american units
 
-If an option -l is given, then the next argument should be used as location for the weather
-USAGE -l [CITY]
+-u
+Updates dynamically every 5 minutes (Can be changed)
 
-If an option -u is given, then the script displays the weather and updates it every five minutes.
+-l [CITY]
+Changes location (Default is Poznan)
